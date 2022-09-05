@@ -7,3 +7,6 @@
 - run `npm start`
 
 This will open a new browser window at http://localhost:3000
+
+
+Live demo of this project can be found at: https://admiral-pioneer-frontend.herokuapp.com/
