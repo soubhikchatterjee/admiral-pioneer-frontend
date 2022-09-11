@@ -1,7 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+// Custom Components
+import * as cartAction from "store/cart/cart.action";
 
 export default function Navigation() {
+  const cartCount = useSelector(state => state.cart[cartAction.GET_CART_COUNT]);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container px-4 px-lg-5">
@@ -33,13 +39,15 @@ export default function Navigation() {
             </li>
           </ul>
           <form className="d-flex">
-            <button className="btn btn-outline-dark" type="submit">
-              <i className="bi-cart-fill me-1"></i>
-              Cart
-              <span className="badge bg-dark text-white ms-1 rounded-pill">
-                0
-              </span>
-            </button>
+            <NavLink to="/cart" className="nav-link active">
+              <button className="btn btn-outline-dark" type="submit">
+                <i className="bi-cart-fill me-1"></i>
+                Cart
+                <span className="badge bg-dark text-white ms-1 rounded-pill">
+                  {cartCount || 0}
+                </span>
+              </button>
+            </NavLink>
           </form>
         </div>
       </div>

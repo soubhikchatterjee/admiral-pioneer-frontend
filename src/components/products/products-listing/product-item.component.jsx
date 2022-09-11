@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import Modal from "react-modal";
+
+// Custom Components
+import ProductModal from "./product-modal/product-modal.component";
 
 function ProductItem({ product }) {
   const [showModal, setShowModal] = useState(false);
   const [showGiftOptions, setShowGiftOptions] = useState(false);
 
-  function toggleModal() {
+  const handleAddToCart = () => {
     setShowModal(!showModal);
-  }
+  };
+
   return (
     <>
       <div className="col mb-5">
@@ -37,9 +40,7 @@ function ProductItem({ product }) {
                 data-bs-toggle="modal"
                 data-bs-target="#giftModal"
                 className="btn btn-outline-dark mt-auto"
-                onClick={() => {
-                  setShowModal(!showModal);
-                }}
+                onClick={handleAddToCart}
               >
                 Add to Cart
               </button>
@@ -47,77 +48,16 @@ function ProductItem({ product }) {
           </div>
         </div>
       </div>
-
-      <Modal
-        isOpen={showModal}
-        onRequestClose={toggleModal}
-        contentLabel="Gift Wrap"
-        style={{
-          content: {
-            width: "20rem",
-            height: "20rem",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)"
-          }
-        }}
-      >
-        <div>Do you want to gift wrap this item?</div>
-        <div className="my-3">
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="flexRadioDefault"
-              id="flexRadioDefault1"
-              onClick={() => {
-                setShowGiftOptions(true);
-              }}
-            />
-            <label className="form-check-label" for="flexRadioDefault1">
-              Yes, I want to gift wrap this item
-            </label>
-          </div>
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="flexRadioDefault"
-              id="flexRadioDefault2"
-              checked
-              onClick={() => {
-                setShowGiftOptions(false);
-              }}
-            />
-            <label className="form-check-label" for="flexRadioDefault2">
-              No, I dont want to gift wrap this item
-            </label>
-          </div>
-        </div>
-        {/* Choose Plan */}
-        {showGiftOptions && (
-          <div className="my-2">
-            <select class="form-select" aria-label="Default select example">
-              <option selected disabled>
-                Choose Plan
-              </option>
-              <option value="standard">Standard ($5)</option>
-              <option value="premium">Premium ($20)</option>
-            </select>
-          </div>
-        )}
-
-        <div className="row justify-content-between mt-5">
-          <div className="col mx-3">
-            <button className="btn btn-danger" onClick={toggleModal}>
-              Cancel
-            </button>
-            <button className="btn btn-success" onClick={toggleModal}>
-              Add to Cart
-            </button>
-          </div>
-        </div>
-      </Modal>
+      {/* Modal */}
+      {showModal && (
+        <ProductModal
+          product={product}
+          showGiftOptions={showGiftOptions}
+          setShowGiftOptions={setShowGiftOptions}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
+      )}
     </>
   );
 }

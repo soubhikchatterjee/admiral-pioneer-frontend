@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 // Custom Components
+import * as taxAction from "store/tax/tax.action";
 import * as productsAction from "store/products/products.action";
 import { ErrorLabel } from "components/components";
 
@@ -21,7 +22,7 @@ function ProductAdd() {
     price: 0,
     custom_quantity: 0,
     taxId: null,
-    tax_percentage: 5
+    tax_percentage: 0
   });
 
   const addProductResponse = useSelector(
@@ -30,6 +31,23 @@ function ProductAdd() {
   const addProductErrors = useSelector(
     state => state.products[productsAction.ADD_PRODUCT_ERROR]
   );
+  const taxResponse = useSelector(state => state.tax[taxAction.GET_ALL_TAX]);
+
+  // Fetch all tax from the backend api
+  useEffect(() => {
+    dispatch(taxAction.getAllTax());
+  }, []);
+
+  // Once tax data is received, set the default tax amount for standard tax
+  useEffect(() => {
+    if (taxResponse) {
+      setPostData(prevState => ({
+        ...prevState,
+        tax_percentage:
+          taxResponse.find(tax => tax.name === "Standard")?.taxAmount || 0
+      }));
+    }
+  }, [taxResponse]);
 
   // On successful submission, redirect to homepage
   useEffect(() => {
@@ -218,23 +236,37 @@ function ProductAdd() {
             <select
               name="taxId"
               onChange={e => {
-                taxApplicableRef.current = e.target.value;
+                const index = e.target.selectedIndex;
+                const optionElement = e.target.childNodes[index];
+                const taxName = optionElement.getAttribute("data-taxname");
+                const taxAmount = optionElement.getAttribute("data-taxamount");
+
+                taxApplicableRef.current = taxName;
                 setPostData(prevState => ({
                   ...prevState,
-                  [e.target.name]: e.target.value
+                  [e.target.name]: e.target.value,
+                  tax_percentage: taxAmount
                 }));
               }}
               className="form-select"
               aria-label="Default select example"
             >
-              <option value="standard">Standard</option>
-              <option value="custom">Custom</option>
+              {taxResponse?.map(tax => (
+                <option
+                  key={tax._id}
+                  data-taxamount={tax.taxAmount}
+                  data-taxname={tax.name}
+                  value={tax._id}
+                >
+                  {tax.name}
+                </option>
+              ))}
             </select>
             <ErrorLabel field="taxId" errors={addProductErrors} />
           </div>
 
           {/* Tax Percentage */}
-          {taxApplicableRef.current === "custom" && (
+          {taxApplicableRef.current === "Custom" && (
             <div className="mb-3">
               <label htmlFor="tax_percentage" className="form-label">
                 Custom Tax (percentage)

@@ -1,28 +1,16 @@
-import * as actions from "./products.action";
+import * as actions from "./cart.action";
 
 const productsReducer = (state = {}, action) => {
   switch (action.type) {
-    case actions.GET_ALL_PRODUCTS_LOADING:
+    case actions.GET_ALL_CART_ITEMS:
       return {
         ...state,
-        [actions.GET_ALL_PRODUCTS_LOADING]: action.payload
+        [actions.GET_ALL_CART_ITEMS]: action.payload
       };
-    case actions.GET_ALL_PRODUCTS:
+    case actions.GET_CART_COUNT:
       return {
         ...state,
-        [actions.GET_ALL_PRODUCTS]: action.payload
-      };
-    case actions.GET_ALL_PRODUCTS_ERROR:
-      return {
-        ...state,
-        [actions.GET_ALL_PRODUCTS_ERROR]: action.payload
-      };
-
-    case actions.ADD_PRODUCT_TO_CART:
-      console.log('state', state)
-      return {
-        ...state,
-        [actions.ADD_PRODUCT_TO_CART]: action.payload
+        [actions.GET_CART_COUNT]: action.payload
       };
 
     default:

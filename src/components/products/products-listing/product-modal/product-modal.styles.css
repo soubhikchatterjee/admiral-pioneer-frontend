@@ -1,0 +1,9 @@
+.modal-add-quantity {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+}
